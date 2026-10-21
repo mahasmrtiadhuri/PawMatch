@@ -1,192 +1,80 @@
-# PawMatch - AI-Powered Dog Adoption Platform
+# PawMatch
 
-PawMatch is an innovative web application that uses AI to match potential adopters with their ideal canine companions. The platform streamlines the adoption process through personalized recommendations, interactive features, and comprehensive shelter management tools.
+### A full-stack dog-adoption discovery and matching application.
 
-## 🚀 Features
+PawMatch brings dog profiles, adopter preferences, favorites, and shelter management into a React and TypeScript interface with an Express API.
 
-### For Pet Adopters
-- **AI-Powered Matching**: Take a comprehensive quiz to get personalized dog recommendations
-- **Smart Search & Filtering**: Find dogs by breed, size, age, activity level, and compatibility
-- **Detailed Dog Profiles**: View comprehensive information about each dog including health status, training level, and personality
-- **Favorites System**: Save and track your favorite dogs
-- **Shelter Information**: Browse participating shelters and their available dogs
+## Project at a glance
 
-### For Shelters
-- **Dashboard Management**: Comprehensive shelter dashboard for managing dog listings
-- **Dog Profile Management**: Add, edit, and update dog information and photos
-- **Adoption Status Tracking**: Monitor and update adoption statuses in real-time
-- **Analytics**: View adoption metrics and success rates
+| Layer | Implementation |
+|---|---|
+| Interface | React, TypeScript, Vite, Wouter |
+| UI | Tailwind CSS, Radix UI, shadcn/ui |
+| Data fetching | TanStack Query |
+| Forms and validation | React Hook Form and Zod |
+| API | Express with TypeScript |
+| Data model | Shared schemas in `shared/schema.ts`; storage abstraction in `server/storage.ts` |
+| Matching | Rule-based compatibility scoring using adopter and dog attributes |
 
-### Core Functionality
-- **Responsive Design**: Fully responsive interface that works on desktop, tablet, and mobile
-- **Real-time Updates**: Live updates on dog availability and adoption status
-- **User Authentication**: Secure login system with role-based access (adopters vs shelters)
-- **Modern UI**: Clean, intuitive interface built with modern design principles
+## Workflows
 
-## 🛠️ Tech Stack
+- Browse dog profiles and filter available dogs.
+- Complete an adopter-preference quiz and receive ranked recommendations.
+- Save favorite dogs and inspect shelter information.
+- Explore shelter-side listing management through the dashboard and API.
 
-### Frontend
-- **React 18** - Modern React with functional components and hooks
-- **TypeScript** - Type-safe development with full IntelliSense support
-- **Vite** - Fast build tool and development server
-- **Wouter** - Lightweight client-side routing
-- **TanStack Query** - Data fetching, caching, and synchronization
-- **React Hook Form** - Performant forms with easy validation
-- **Zod** - TypeScript-first schema validation
+## Matching approach
 
-### UI & Styling
-- **Tailwind CSS** - Utility-first CSS framework
-- **shadcn/ui** - High-quality accessible UI components
-- **Radix UI** - Unstyled, accessible UI primitives
-- **Lucide React** - Beautiful & consistent icons
-- **Framer Motion** - Production-ready motion library
+The implemented recommendation path scores activity level, family and pet compatibility, preferred size, and age. A client-side scorer also considers yard access and time alone. The repository imports TensorFlow.js, but the current recommendation logic uses explicit rules rather than a trained model. Client and server scoring implementations should be consolidated before treating their scores as equivalent.
 
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Fast, unopinionated web framework
-- **TypeScript** - Type-safe server-side development
-- **Drizzle ORM** - Type-safe database operations
-- **Zod Validation** - Request/response validation
+## Run locally
 
-### Database & Storage
-- **PostgreSQL** - Robust relational database (production)
-- **In-Memory Storage** - Fast development storage solution
-- **Drizzle Kit** - Database migrations and management
+Use a supported Node.js installation and npm. The development scripts use POSIX environment-variable syntax; on Windows, use WSL or an equivalent shell.
 
-### Development Tools
-- **ESBuild** - Fast JavaScript bundler
-- **PostCSS** - CSS post-processing
-- **Autoprefixer** - Automatic CSS vendor prefixing
-
-### AI & Machine Learning
-- **TensorFlow.js** - Machine learning capabilities for recommendation engine
-- **Custom Matching Algorithm** - Intelligent dog-adopter compatibility scoring
-
-## 📦 Project Structure
-
-```
-├── client/                 # Frontend React application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   │   ├── dogs/       # Dog-related components
-│   │   │   ├── home/       # Homepage components
-│   │   │   ├── layout/     # Layout components (Navbar, Footer)
-│   │   │   ├── quiz/       # Matching quiz components
-│   │   │   ├── shelters/   # Shelter-related components
-│   │   │   └── ui/         # shadcn/ui components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── lib/            # Utility functions and configurations
-│   │   ├── pages/          # Page components
-│   │   └── App.tsx         # Main application component
-│   └── index.html          # HTML entry point
-├── server/                 # Backend Express application
-│   ├── index.ts           # Server entry point
-│   ├── routes.ts          # API route definitions
-│   ├── storage.ts         # Data storage interface
-│   └── vite.ts            # Vite integration
-├── shared/                 # Shared types and schemas
-│   └── schema.ts          # Database schema and types
-└── attached_assets/       # Project assets and documentation
+```bash
+git clone https://github.com/mahasmrtiadhuri/PawMatch.git
+cd PawMatch
+npm install
+npm run dev
 ```
 
-## 🚀 Getting Started
+Open `http://localhost:5000`.
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn package manager
+```bash
+npm run check
+npm run build
+npm start
+```
 
-### Installation
+`check` runs the TypeScript compiler; `build` creates the client and server bundles. These are the repository's validation commands, not a claim that they were run in every environment.
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd pawmatch
-   ```
+## Architecture
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```mermaid
+flowchart TD
+    UI[React application] --> API[Express API]
+    API --> Validation[Shared Zod schemas]
+    API --> Storage[Storage interface]
+    Preferences[Adopter preferences] --> Scoring[Compatibility rules]
+    Scoring --> UI
+```
 
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+## Repository guide
 
-4. **Open your browser**
-   Navigate to `http://localhost:5000` to view the application
+| Path | Responsibility |
+|---|---|
+| `client/src/pages/` | Application routes and screens |
+| `client/src/components/` | Domain and UI components |
+| `client/src/lib/recommendation.ts` | Client-side compatibility scoring |
+| `server/routes.ts` | API routes, validation, and server recommendation path |
+| `server/storage.ts` | Storage operations |
+| `shared/schema.ts` | Shared domain types and schemas |
+| `drizzle.config.ts` | Database tooling configuration |
 
-### Environment Setup
+## Scope
 
-The application runs on a single port (5000) with Vite handling both frontend and backend serving. No additional configuration is required for development.
+This is a demonstration application. The current API uses a `user-id` header for demo authentication and compares stored passwords directly. Replace that flow with password hashing and verified sessions before using real accounts or exposing a public deployment. Production database persistence and real-time synchronization should be verified independently rather than inferred from installed packages.
 
-For production deployment with a database:
-- Set up PostgreSQL database
-- Configure environment variables for database connection
-- Run database migrations using Drizzle Kit
+## Next engineering work
 
-## 🎯 Key Features Implementation
-
-### AI Matching Algorithm
-The recommendation engine uses a multi-factor scoring system that considers:
-- Lifestyle compatibility (activity level, home type, yard access)
-- Experience level matching
-- Family composition (kids, other pets)
-- Size and space requirements
-- Time availability for care
-
-### Data Architecture
-- **Type-safe schema** defined in `shared/schema.ts`
-- **Consistent validation** using Zod schemas across frontend and backend
-- **Optimistic updates** with TanStack Query for responsive UI
-- **Efficient caching** strategy for improved performance
-
-### User Experience
-- **Progressive disclosure** in the matching quiz (3-step process)
-- **Responsive design** that works seamlessly across devices
-- **Accessible components** built with Radix UI primitives
-- **Loading states** and error handling throughout the application
-
-## 🔧 Development Workflow
-
-### Code Organization
-- **Component-based architecture** with clear separation of concerns
-- **Custom hooks** for reusable stateful logic
-- **Shared types** between frontend and backend
-- **Consistent styling** with Tailwind CSS utility classes
-
-### API Design
-- **RESTful endpoints** for all CRUD operations
-- **Type-safe request/response** validation
-- **Error handling** with meaningful error messages
-- **Consistent data formats** across all endpoints
-
-## 📱 Responsive Design
-
-PawMatch is built mobile-first with responsive breakpoints:
-- **Mobile**: < 768px - Single column layout, touch-optimized interactions
-- **Tablet**: 768px - 1024px - Two-column grids, optimized for touch
-- **Desktop**: > 1024px - Multi-column layouts, hover interactions
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🎉 Acknowledgments
-
-- Dog photos sourced from Unsplash
-- UI components built with shadcn/ui and Radix UI
-- Icons provided by Lucide React
-- AI recommendations powered by TensorFlow.js
-
----
-
-**PawMatch** - Connecting hearts, one paw at a time. 🐾
+Consolidate recommendation scoring; add scoring and authorization tests; replace demo authentication; validate database-backed persistence; and add reproducible interface captures. These are planned improvements.
